@@ -3,7 +3,7 @@ version: "2"
 services:
 
   iota:
-    image: iotaledger/iri:v1.4.2.2
+    image: iotaledger/iri:latest
     container_name: iota_iri
     hostname: iota
     restart: unless-stopped
@@ -28,7 +28,7 @@ services:
 #    command: ["/usr/bin/java", "-XX:+DisableAttachMechanism", "-Xmx4g", "-Xms256m", "-Dlogback.configurationFile=/iri/conf/logback.xml", "-Djava.net.preferIPv4Stack=true", "-jar", "iri.jar", "-c", "/iri.iota.ini", "--revalidate", "--rescan"]
 
   nelson.cli:
-    image: romansemko/nelson.cli:0.4.0-beta
+    image: romansemko/nelson.cli:latest
     container_name: iota_nelson.cli
     hostname: nelson.cli
     restart: unless-stopped
@@ -51,7 +51,7 @@ services:
       - "3000:3000"
 
   nelson.gui:
-    image: romansemko/nelson.gui:0.2.2-beta
+    image: romansemko/nelson.gui:latest
     container_name: iota_nelson.gui
     hostname: nelson.gui
     network_mode: "host"
@@ -73,7 +73,7 @@ services:
       - "21310:21310"
 
   prometheus:
-    image: prom/prometheus:v2.2.0
+    image: prom/prometheus:latest
     container_name: iota_prometheus
     hostname: prometheus
     restart: unless-stopped
