@@ -42,7 +42,7 @@ services:
       - "16600:16600"
 
   nelson.mon:
-    build: https://github.com/SemkoDev/nelson.mon.git
+    image: romansemko/nelson.mon:latest
     container_name: iota_nelson.mon
     hostname: nelson.mon
     network_mode: "host"
