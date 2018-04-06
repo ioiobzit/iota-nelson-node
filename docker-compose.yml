@@ -41,15 +41,6 @@ services:
       - "18600:18600"
       - "16600:16600"
 
-  nelson.mon:
-    image: ioiobzit/nelson.mon:0.0.3
-    container_name: iota_nelson.mon
-    hostname: nelson.mon
-    network_mode: "host"
-    restart: unless-stopped
-    ports:
-      - "3000:3000"
-
   nelson.gui:
     image: romansemko/nelson.gui:latest
     container_name: iota_nelson.gui
