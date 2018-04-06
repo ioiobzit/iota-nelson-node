@@ -9,7 +9,6 @@
     + [Start the node](#start-the-node)
     + [Check the logs](#check-the-logs)
     + [Open Nelson GUI](#open-nelson-gui)
-    + [Open Nelson Monitor](#open-nelson-monitor)
     + [Open Grafana Dashboard](#open-grafana-dashboard)
     + [Update when a new release of any container is published](#update-when-a-new-release-of-any-container-is-published)
       - [Use the update script](#use-the-update-script)
@@ -170,13 +169,6 @@ Open your browser to
 http://DockerHostIP:5000/#/<username>:<password>
 ```
 
-### Open Nelson Monitor
-
-Open your browser to
-```
-http://DockerHostIP:3000
-```
-
 ### Open Grafana Dashboard
 
 For the Grafana Dashboard to work, first we have to fix Prometheus. See [the documentation here](https://github.com/prometheus/prometheus/issues/2939).
@@ -295,7 +287,6 @@ Port/Type | Use
 16600 | Nelson connection port
 18600 | Nelson API port
 21310 | CarrIOTA Field connection port
-3000 | Nelson Monitor
 5000 | Nelson GUI
 9090 | Prometheus
 9100 | Node Exporter
@@ -333,6 +324,7 @@ sudo ufw allow 16600
 sudo ufw allow 18600
 sudo ufw allow 21310/tcp
 sudo ufw allow 8000
+sudo ufw allow 5000
 sudo ufw enable
 sudo ufw limit 14265
 sudo ufw enable
@@ -344,7 +336,6 @@ For more information about the combined projects please refer to the following g
 * [IRI - IOTA Node](https://github.com/iotaledger/iri)
 * [CarrIOTA Nelson client](https://github.com/SemkoDev/nelson.cli)
 * [CarrIOTA Nelson GUI](https://github.com/SemkoDev/nelson.gui)
-* [CarrIOTA Nelson monitor](https://github.com/SemkoDev/nelson.mon)
 * [CarrIOTA Field client](https://github.com/SemkoDev/field.cli)
 * [IOTA prometheus exporter](https://github.com/crholliday/iota-prom-exporter)
 
