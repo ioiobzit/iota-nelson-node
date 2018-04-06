@@ -42,7 +42,7 @@ services:
       - "16600:16600"
 
   nelson.mon:
-    image: romansemko/nelson.mon:latest
+    image: ioiobzit/nelson.mon:0.0.3
     container_name: iota_nelson.mon
     hostname: nelson.mon
     network_mode: "host"
