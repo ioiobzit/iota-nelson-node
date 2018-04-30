@@ -120,6 +120,7 @@ services:
     restart: on-failure
     ports:
       - "8000:3000"
+    user: "root"
     volumes:
       - ./volumes/grafana:/var/lib/grafana
       - /etc/localtime:/etc/localtime:ro
