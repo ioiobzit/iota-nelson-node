@@ -11,6 +11,8 @@ services:
       - ./volumes/iota/iota.ini:/iri/iota.ini:ro
       - ./volumes/iota/ixi:/iri/ixi:rw
       - ./volumes/iota/mainnetdb:/iri/mainnetdb:rw
+      # Use this volume when you want to upgrade the Tangle
+      #- ./volumes/iota/tools:/iri/tools:rw
       - /etc/localtime:/etc/localtime:ro
     expose:
       - "5556"
@@ -26,6 +28,8 @@ services:
 #    command: ["/usr/bin/java", "-XX:+DisableAttachMechanism", "-Xmx8g", "-Xms256m", "-Dlogback.configurationFile=/iri/conf/logback.xml", "-Djava.net.preferIPv4Stack=true", "-jar", "iri.jar", "-c", "/iri.iota.ini", "--revalidate", "--rescan"]
 # Use the following for 4GB rescan and revalidate
 #    command: ["/usr/bin/java", "-XX:+DisableAttachMechanism", "-Xmx4g", "-Xms256m", "-Dlogback.configurationFile=/iri/conf/logback.xml", "-Djava.net.preferIPv4Stack=true", "-jar", "iri.jar", "-c", "/iri.iota.ini", "--revalidate", "--rescan"]
+# Use the following to migrate your Tangle
+#    command: ["/usr/bin/java", "-jar", "tools/iri.jar", "iri-1.4.2.2-to-1.4.2.4_RC-db-migration-tool.jar."]
 
   nelson.cli:
     image: romansemko/nelson.cli:latest
