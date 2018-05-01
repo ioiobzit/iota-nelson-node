@@ -4,6 +4,7 @@
     + [Prerequisites](#prerequisites)
   * [Usage](#usage)
     + [Clone the repository](#clone-the-repository)
+      - [Choose RAM for Java in docker-compose.yml](#choose-ram-for-java-in-docker-composeyml)
       - [Change the Nelson config.ini](#change-the-nelson-configini)
       - [Change the Field config.ini](#change-the-field-configini)
     + [Start the node](#start-the-node)
@@ -14,11 +15,15 @@
       - [Use the update script](#use-the-update-script)
       - [Update single container](#update-single-container)
       - [Update all containers](#update-all-containers)
+  * [Snapshot and IRI Update to new version](#snapshot-and-iri-update-to-new-version)
+    + [Option 1 - Do not update IRI NOT RECCOMENDED](#option-1---do-not-update-iri-not-reccomended)
+    + [Option 2 - Delete the local Tangle and start with the snapshotted milestone](#option-2---delete-the-local-tangle-and-start-with-the-snapshotted-milestone)
+    + [Option 3 - Become a permanode from here on](#option-3---become-a-permanode-from-here-on)
   * [IRI Nodes information](#iri-nodes-information)
   * [Warnings](#warnings)
     + [Ports](#ports)
     + [Remote API limits](#remote-api-limits)
-    + [Firewall (ufw) rules](#firewall--ufw--rules)
+    + [Firewall ufw rules](#firewall-ufw-rules)
   * [More information](#more-information)
 - [Author](#author)
 - [License](#license)
@@ -241,6 +246,78 @@ docker-compose stop
 docker-compose rm iota
 docker-compose rm nelson.cli
 docker-compose up -d
+```
+
+## Snapshot and IRI Update to new version
+
+Every once in a while the Tangle is snapshotted and a new version of IRI is published. This means that all 0-value transactions are purged from the Tangle, mainly to save space on the fullnodes.
+A conseguence is that sensor data sent over the Tangle with 0-value transactions are deleted.
+To keep this data available there is the need to keep permanodes running and also to have enough disk space on our server.
+
+As a IOTA node administrator we have three options:
+
+### Option 1 - Do not update IRI (NOT RECCOMENDED)
+
+Just keep your node running with the actual version. Personally I do not reccomend this options
+
+### Option 2 - Delete the local Tangle and start with the snapshotted milestone
+
+This operation saves space on your fullnode's disk an deletes all 0-value transactions.
+
+Instructions:
+
+* Stop the iota container
+```
+docker-compose stop iota
+```
+* Delete the Tangle
+```
+sudo rm -rf volumes/iota/mainnetdb
+```
+* Restart the iota container
+```
+docker-compose up -d iota
+```
+
+### Option 3 - Become a permanode from here on
+
+This operation keeps the Tangle intact from the snapshot you started from and need more this space, since the 0-value transactions are not purged from the Tangle.
+
+Instructions:
+
+* Stop the iota container
+```
+docker-compose stop iota
+```
+* Edit the docker-compose file by commenting the command line e.g. line 24, add a new volume on line 15 to your IOTA container service, uncomment the command line on line 32 
+e.g. 
+```
+#    command: ["/usr/bin/java", "-XX:+DisableAttachMechanism", "-Xmx8g", "-Xms256m", "-Dlogback.configurationFile=/iri/conf/logback.xml", "-Djava.net.preferIPv4Stack=true", "-jar", "iri.jar", "-c", "/iri.iota.ini"]
+- ./volumes/iota/tools:/iri/tools:rw
+command: ["/usr/bin/java", "-jar", "tools/iri.jar", "iri-1.4.2.2-to-1.4.2.4_RC-db-migration-tool.jar."]
+```
+* Make a new directory to download the migration utility
+```
+mkdir volumes/iota/tools
+```
+e.g. for v 1.4.2.4
+```
+cd volumes/iota/tools && wget https://s3.eu-central-1.amazonaws.com/iotaledger-dbfiles/tools/iri-1.4.2.2-to-1.4.2.4_RC-db-migration-tool.jar
+```
+* Run the upgrade
+```
+docker-compose up iota
+```
+* As soon as IRI shuts down with the message ```[Shutdown Hook] INFO com.iota.iri IRI - Shutting down IOTA node, please hold tight```, kill the docker container with CRTL-C
+* Uncomment line 24, comment line 15 and 32
+e.g.
+```command: ["/usr/bin/java", "-XX:+DisableAttachMechanism", "-Xmx8g", "-Xms256m", "-Dlogback.configurationFile=/iri/conf/logback.xml", "-Djava.net.preferIPv4Stack=true", "-jar", "iri.jar", "-c", "/iri.iota.ini"]
+#- ./volumes/iota/tools:/iri/tools:rw
+#command: ["/usr/bin/java", "-jar", "tools/iri.jar", "iri-1.4.2.2-to-1.4.2.4_RC-db-migration-tool.jar."]
+```
+* Restart your iota container
+```
+docker-compose up -d iota
 ```
 
 ## IRI Nodes information
